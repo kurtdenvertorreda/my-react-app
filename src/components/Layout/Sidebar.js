@@ -5,7 +5,7 @@ import { HomeIcon, AcademicCapIcon, UsersIcon, CreditCardIcon, DocumentReportIco
 
 const Sidebar = () => {
   return (
-    <div className="flex flex-col w-64 bg-gray-800">
+    <div className="flex flex-col w-64 bg-[#f3e8db]">
       <div className="flex items-center justify-center h-20 shadow-md">
         <h1 className="text-3xl uppercase text-white">CRUD Operations</h1>
       </div>

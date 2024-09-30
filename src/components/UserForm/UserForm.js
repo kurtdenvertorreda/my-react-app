@@ -1,7 +1,7 @@
 // components/UserForm/UserForm.js
 import React, { useState, useEffect } from 'react';
 
-const UserForm = ({ addUser, updateUser, selectedUser, setSelectedUser }) => {
+const UserForm = ({ addUser, updateUser, selectedUser, onClose }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -44,17 +44,11 @@ const UserForm = ({ addUser, updateUser, selectedUser, setSelectedUser }) => {
     } else {
       addUser(formData);
     }
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      address: { street: '', suite: '', city: '' },
-      company: { name: '' }
-    });
   };
 
   return (
     <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <h2 className="text-2xl font-bold mb-4">{selectedUser ? 'Edit User' : 'Add New User'}</h2>
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
           Name
@@ -137,15 +131,13 @@ const UserForm = ({ addUser, updateUser, selectedUser, setSelectedUser }) => {
         >
           {selectedUser ? 'Update User' : 'Add User'}
         </button>
-        {selectedUser && (
-          <button
-            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="button"
-            onClick={() => setSelectedUser(null)}
-          >
-            Cancel
-          </button>
-        )}
+        <button
+          className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="button"
+          onClick={onClose}
+        >
+          Cancel
+        </button>
       </div>
     </form>
   );

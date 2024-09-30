@@ -1,8 +1,8 @@
-// components/UserList/UserList.js
+// src/components/UserList/UserList.js
 import React from 'react';
 import UserListItem from './UserListItem';
 
-const UserList = ({ users, setSelectedUser, deleteUser }) => {
+const UserList = ({ users, onEditUser, onDeleteUser }) => {
   return (
     <div className="mt-8">
       <div className="overflow-x-auto">
@@ -22,8 +22,8 @@ const UserList = ({ users, setSelectedUser, deleteUser }) => {
               <UserListItem 
                 key={user.id} 
                 user={user} 
-                setSelectedUser={setSelectedUser} 
-                deleteUser={deleteUser} 
+                onEdit={() => onEditUser(user)} 
+                onDelete={() => onDeleteUser(user.id)} 
               />
             ))}
           </tbody>
