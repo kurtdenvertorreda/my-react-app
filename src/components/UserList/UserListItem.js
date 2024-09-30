@@ -13,13 +13,13 @@ const UserListItem = ({ user, onEdit, onDelete }) => {
       <td>
         <button 
           onClick={onEdit}
-          className="text-blue-500 hover:text-blue-600 mr-2"
+          className="text-yellow-500 hover:text-blue-600 mr-2"
         >
           <PencilIcon className="h-5 w-5" />
         </button>
         <button 
           onClick={onDelete}
-          className="text-red-500 hover:text-red-600"
+          className="text-yellow-500 hover:text-red-600"
         >
           <TrashIcon className="h-5 w-5" />
         </button>
