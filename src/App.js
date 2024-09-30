@@ -6,6 +6,8 @@ import UserList from './components/UserList/UserList';
 import UserForm from './components/UserForm/UserForm';
 import Modal from './components/Modal/Modal';
 import { fetchUsers, createUser, updateUser, deleteUser } from './services/Api';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   const [users, setUsers] = useState([]);
@@ -14,36 +16,51 @@ const App = () => {
 
   useEffect(() => {
     fetchUsers()
-      .then(response => setUsers(response.data))
-      .catch(error => console.error('Error fetching users:', error));
+      .then(response => {
+        setUsers(response.data);
+        console.log('Users fetched successfully', { status: response.status });
+      })
+      .catch(error => {
+        console.error('Error fetching users:', error.response?.status, error.message);
+        toast.error('Failed to fetch users');
+      });
   }, []);
 
   const handleAddUser = async (userData) => {
     try {
       const response = await createUser(userData);
       setUsers([...users, response.data]);
+      console.log('User added successfully', { status: response.status, data: response.data });
+      toast.success('User added successfully');
       handleCloseModal();
     } catch (error) {
-      console.error('Error adding user:', error);
+      console.error('Error adding user:', error.response?.status, error.message);
+      toast.error('Failed to add user');
     }
   };
 
   const handleUpdateUser = async (id, updatedUserData) => {
     try {
-      await updateUser(id, updatedUserData);
-      setUsers(users.map(user => user.id === id ? { ...user, ...updatedUserData } : user));
+      const response = await updateUser(id, updatedUserData);
+      setUsers(users.map(user => user.id === id ? { ...user, ...response.data } : user));
+      console.log('User updated successfully', { status: response.status, data: response.data });
+      toast.success('User updated successfully');
       handleCloseModal();
     } catch (error) {
-      console.error('Error updating user:', error);
+      console.error('Error updating user:', error.response?.status, error.message);
+      toast.error('Failed to update user');
     }
   };
 
   const handleDeleteUser = async (id) => {
     try {
-      await deleteUser(id);
+      const response = await deleteUser(id);
       setUsers(users.filter(user => user.id !== id));
+      console.log('User deleted successfully', { status: response.status });
+      toast.success('User deleted successfully');
     } catch (error) {
-      console.error('Error deleting user:', error);
+      console.error('Error deleting user:', error.response?.status, error.message);
+      toast.error('Failed to delete user');
     }
   };
 
@@ -70,7 +87,6 @@ const App = () => {
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
           <div className="container mx-auto px-6 py-8">
             <h3 className="text-gray-700 text-3xl font-medium">Users List</h3>
-            
             <UserList 
               users={users} 
               onEditUser={handleEditUser} 
@@ -87,6 +103,7 @@ const App = () => {
           onClose={handleCloseModal}
         />
       </Modal>
+      <ToastContainer />
     </div>
   );
 };

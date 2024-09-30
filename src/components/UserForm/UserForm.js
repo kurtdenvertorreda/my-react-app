@@ -1,4 +1,4 @@
-// components/UserForm/UserForm.js
+// src/components/UserForm/UserForm.js
 import React, { useState, useEffect } from 'react';
 
 const UserForm = ({ addUser, updateUser, selectedUser, onClose }) => {
@@ -9,6 +9,7 @@ const UserForm = ({ addUser, updateUser, selectedUser, onClose }) => {
     address: { street: '', suite: '', city: '' },
     company: { name: '' }
   });
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (selectedUser) {
@@ -35,95 +36,140 @@ const UserForm = ({ addUser, updateUser, selectedUser, onClose }) => {
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
+    // Clear error when user starts typing
+    setErrors(prev => ({ ...prev, [name]: '' }));
+  };
+
+  const validateForm = () => {
+    let formErrors = {};
+    if (!formData.name.trim()) formErrors.name = 'Name is required';
+    if (!formData.email.trim()) {
+      formErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      formErrors.email = 'Email is invalid';
+    }
+    if (!formData.phone.trim()) {
+      formErrors.phone = 'Phone is required';
+    } 
+    if (!formData.address.street.trim()) formErrors['address.street'] = 'Street is required';
+    if (!formData.address.city.trim()) formErrors['address.city'] = 'City is required';
+    if (!formData.company.name.trim()) formErrors['company.name'] = 'Company name is required';
+
+    setErrors(formErrors);
+    return Object.keys(formErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (selectedUser) {
-      updateUser(selectedUser.id, formData);
-    } else {
-      addUser(formData);
+    if (validateForm()) {
+      if (selectedUser) {
+        updateUser(selectedUser.id, formData);
+      } else {
+        addUser(formData);
+      }
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
       <h2 className="text-2xl font-bold mb-4">{selectedUser ? 'Edit User' : 'Add New User'}</h2>
+      
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
           Name
         </label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${errors.name ? 'border-red-500' : ''}`}
           id="name"
           type="text"
           placeholder="Name"
           name="name"
           value={formData.name}
           onChange={handleChange}
-          required
         />
+        {errors.name && <p className="text-red-500 text-xs italic">{errors.name}</p>}
       </div>
+
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
           Email
         </label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${errors.email ? 'border-red-500' : ''}`}
           id="email"
           type="email"
           placeholder="Email"
           name="email"
           value={formData.email}
           onChange={handleChange}
-          required
         />
+        {errors.email && <p className="text-red-500 text-xs italic">{errors.email}</p>}
       </div>
+
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phone">
           Phone
         </label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${errors.phone ? 'border-red-500' : ''}`}
           id="phone"
           type="tel"
           placeholder="Phone"
           name="phone"
           value={formData.phone}
           onChange={handleChange}
-          required
         />
+        {errors.phone && <p className="text-red-500 text-xs italic">{errors.phone}</p>}
       </div>
+
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="address.street">
           Street Address
         </label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${errors['address.street'] ? 'border-red-500' : ''}`}
           id="address.street"
           type="text"
           placeholder="Street Address"
           name="address.street"
           value={formData.address.street}
           onChange={handleChange}
-          required
         />
+        {errors['address.street'] && <p className="text-red-500 text-xs italic">{errors['address.street']}</p>}
       </div>
+
+      <div className="mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="address.city">
+          City
+        </label>
+        <input
+          className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${errors['address.city'] ? 'border-red-500' : ''}`}
+          id="address.city"
+          type="text"
+          placeholder="City"
+          name="address.city"
+          value={formData.address.city}
+          onChange={handleChange}
+        />
+        {errors['address.city'] && <p className="text-red-500 text-xs italic">{errors['address.city']}</p>}
+      </div>
+
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="company.name">
           Company Name
         </label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${errors['company.name'] ? 'border-red-500' : ''}`}
           id="company.name"
           type="text"
           placeholder="Company Name"
           name="company.name"
           value={formData.company.name}
           onChange={handleChange}
-          required
         />
+        {errors['company.name'] && <p className="text-red-500 text-xs italic">{errors['company.name']}</p>}
       </div>
+
       <div className="flex items-center justify-between">
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
