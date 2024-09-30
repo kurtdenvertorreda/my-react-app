@@ -12,25 +12,26 @@ const UserList = ({ users, onEditUser, onDeleteUser, usersPerPage, totalUsers, p
   return (
     <div className="mt-8">
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white">
+        <table className="min-w-full bg-transparent">
           <thead>
-            <tr className="w-full h-16 border-gray-300 border-b py-8">
-              <th className="text-left text-white">Icon</th>
+            <tr className="w-full h-16 border-gray-200 bg-gray-50  border-t py-8">
+              <th className="text-left text-gray-50">Icon</th>
               <th className="text-left pl-4">Name</th>
               <th className="text-left">Email</th>
               <th className="text-left">Phone</th>
               <th className="text-left">Address</th>
               <th className="text-left">Company</th>
-              <th className="text-left text-white">Action</th>
+              <th className="text-left text-gray-50">Action</th>
             </tr>
           </thead>
           <tbody>
-            {users.map(user => (
+            {users.map((user, index) => (
               <UserListItem 
                 key={user.id} 
                 user={user} 
                 onEdit={() => onEditUser(user)} 
                 onDelete={() => onDeleteUser(user.id)} 
+                index={index}  // Pass index to UserListItem for alternating row background
               />
             ))}
           </tbody>
