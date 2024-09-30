@@ -6,7 +6,7 @@ const Sidebar = () => {
   return (
     <div className="flex flex-col w-64 bg-[#f3e8db] text-black h-screen">
       {/* Logo Section */}
-      <div className="flex items-center justify-center h-20 shadow-md">
+      <div className="flex items-center justify-center h-18 mt-5">
         <h1 className="text-2xl font-bold uppercase">CRUD Operations</h1>
       </div>
 

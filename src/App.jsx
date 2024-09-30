@@ -13,6 +13,8 @@ const App = () => {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [usersPerPage] = useState(5);
 
   useEffect(() => {
     fetchUsers()
@@ -26,6 +28,13 @@ const App = () => {
       });
   }, []);
 
+// Calculate current users
+const indexOfLastUser = currentPage * usersPerPage;
+const indexOfFirstUser = indexOfLastUser - usersPerPage;
+const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+
+// Change page
+const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const handleAddUser = async (userData) => {
     try {
       const response = await createUser(userData);
@@ -83,14 +92,26 @@ const App = () => {
     <div className="flex h-screen bg-gray-100">
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Header onAddNewUser={handleAddNewUser} />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
+        <Header />
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
           <div className="container mx-auto px-6 py-8">
-            <h3 className="text-gray-700 text-3xl font-medium">Users List</h3>
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-gray-700 text-3xl font-medium">Users List</h3>
+              <button 
+                onClick={handleAddNewUser}
+                className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded"
+              >
+                ADD NEW USER
+              </button>
+            </div>
             <UserList 
-              users={users} 
+              users={currentUsers} 
               onEditUser={handleEditUser} 
-              onDeleteUser={handleDeleteUser} 
+              onDeleteUser={handleDeleteUser}
+              usersPerPage={usersPerPage}
+              totalUsers={users.length}
+              paginate={paginate}
+              currentPage={currentPage}
             />
           </div>
         </main>
